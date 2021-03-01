@@ -1,0 +1,9 @@
+*.pyc
+test_package/build
+.vs/
+.vscode/
+CMakeSettings.json
+build/
+builds/
+out/
+profiler/
