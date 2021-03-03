@@ -3,7 +3,7 @@ This is an attempt at a simple raytracer written in simple, clean C code (or rat
 No callbacks, no classes, no templates, no libraries, no frameworks,
 no game engines, no physics simulations, no animations, no game loops.
 
-Takes a description of a file (hardcoded in C, for now), a name for the image file, the width and height,
+Takes a description of a scene (hardcoded in C, for now), a name for the image file, the width and height,
 and generates the image file in one pass.
 
 # Sources
