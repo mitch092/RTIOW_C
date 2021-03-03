@@ -15,3 +15,5 @@ and generates the image file in one pass.
 * https://stackoverflow.com/questions/20019786/safe-and-portable-way-to-convert-a-char-to-uint16-t
 * https://stackoverflow.com/questions/7259238/how-to-forward-typedefd-struct-in-h
 * https://alvinalexander.com/programming/printf-format-cheat-sheet/
+* https://www.programiz.com/c-programming/c-file-input-output#read-write-binary
+* https://stackoverflow.com/questions/28691612/how-to-go-from-fopen-to-fopen-s/28696742
