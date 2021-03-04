@@ -1,4 +1,5 @@
 #pragma warning(push, 0)
+#include <assert.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,14 +16,13 @@ image_tga image_tga_create(uint16_t width, uint16_t height) {
   // Using calloc to zero out the entire image. So the pixels will all be black by default.
   // And most of the header is zero, except for a few bytes.
   image.byte_array = calloc(image_tga_size_bytes(width, height), sizeof(uint8_t));
+  assert(image.byte_array != NULL);
 
   // Set the data type code to uncompressed RGB.
   image.byte_array[2] = 2;
 
-  // Split the width and height into bytes.
-  // Casting from 16 bits unsigned to 8 bits *should* chop off the high byte and keep the low byte.
+  // Split the 16 bit width and height into a pair of 8 bit bytes.
   image.byte_array[12] = (uint8_t)(width);
-  // Bit shifting right 8 bits, then casting *should* return just the high byte.
   image.byte_array[13] = (uint8_t)(width >> 8);
   image.byte_array[14] = (uint8_t)(height);
   image.byte_array[15] = (uint8_t)(height >> 8);
@@ -34,14 +34,22 @@ image_tga image_tga_create(uint16_t width, uint16_t height) {
 }
 
 uint16_t image_tga_width(const image_tga image) {
-  return ((uint16_t)(image.byte_array[13]) << 8) | ((uint16_t)(image.byte_array[12]));
+  assert(image.byte_array != NULL);
+  return ((uint16_t)(image.byte_array[13]) << 8) | (uint16_t)(image.byte_array[12]);
 }
 
 uint16_t image_tga_height(const image_tga image) {
-  return ((uint16_t)(image.byte_array[15]) << 8) | ((uint16_t)(image.byte_array[14]));
+  assert(image.byte_array != NULL);
+  return ((uint16_t)(image.byte_array[15]) << 8) | (uint16_t)(image.byte_array[14]);
 }
 
 void image_tga_set_pixel(image_tga image, uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b) {
+  assert(image.byte_array != NULL);
+  assert(0 <= x);
+  assert(0 <= y);
+  assert(x < image_tga_width(image));
+  assert(y < image_tga_height(image));
+
   const size_t pixel_offset = (HEADER_SIZE + x + y * image_tga_width(image));
   image.byte_array[pixel_offset] = b;
   image.byte_array[pixel_offset + 1] = g;
@@ -50,6 +58,8 @@ void image_tga_set_pixel(image_tga image, uint16_t x, uint16_t y, uint8_t r, uin
 }
 
 void image_tga_set_all(image_tga image, uint8_t r, uint8_t g, uint8_t b) {
+  assert(image.byte_array != NULL);
+
   uint16_t height = image_tga_height(image);
   uint16_t width = image_tga_width(image);
   for (uint16_t y = 0; y != height; ++y) {
@@ -60,6 +70,8 @@ void image_tga_set_all(image_tga image, uint8_t r, uint8_t g, uint8_t b) {
 }
 
 bool image_tga_write_file(image_tga image, const char* filename) {
+  assert(image.byte_array != NULL);
+
   FILE* file;
   errno_t err;
   err = fopen_s(&file, filename, "wb");
@@ -78,6 +90,8 @@ bool image_tga_write_file(image_tga image, const char* filename) {
 }
 
 void image_tga_destroy(image_tga image) {
+  assert(image.byte_array != NULL);
+
   free(image.byte_array);
   image.byte_array = NULL;
   return;

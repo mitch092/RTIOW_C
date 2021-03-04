@@ -24,9 +24,13 @@ int main(int argc, const char* argv[]) {
     return EXIT_FAILURE;
   }
 
-  image_tga image = image_tga_create(width, height);
+  image_tga image = image_tga_create(width, height);  
   image_tga_set_all(image, 255, 255, 255);
-  image_tga_write_file(image, argv[3]);
+
+  if (image_tga_write_file(image, argv[3]) == false) {
+    return EXIT_FAILURE;
+  }
+
   image_tga_destroy(image);
 
   return EXIT_SUCCESS;
