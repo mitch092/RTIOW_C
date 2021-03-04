@@ -24,8 +24,17 @@ int main(int argc, const char* argv[]) {
     return EXIT_FAILURE;
   }
 
-  image_tga image = image_tga_create(width, height);  
-  image_tga_set_all(image, 255, 255, 255);
+  image_tga image = image_tga_create(width, height);
+
+  //image_tga_set_all(image, 255, 255, 255);
+  //image_tga_set_pixel(image, 0, 0, 0, 0, 0);
+
+  image_tga_set_pixel(image, 0, 0, 255, 0, 0);
+  image_tga_set_pixel(image, 1, 0, 0, 255, 0);
+  image_tga_set_pixel(image, 2, 0, 0, 0, 255);
+  image_tga_set_pixel(image, 0, 1, 255, 255, 0);
+  image_tga_set_pixel(image, 1, 1, 255, 255, 255);
+  image_tga_set_pixel(image, 2, 1, 0, 0, 0);
 
   if (image_tga_write_file(image, argv[3]) == false) {
     return EXIT_FAILURE;

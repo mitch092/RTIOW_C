@@ -17,3 +17,5 @@ and generates the image file in one pass.
 * https://alvinalexander.com/programming/printf-format-cheat-sheet/
 * https://www.programiz.com/c-programming/c-file-input-output#read-write-binary
 * https://stackoverflow.com/questions/28691612/how-to-go-from-fopen-to-fopen-s/28696742
+* https://eklitzke.org/declaring-c-string-constants-the-right-way
+* https://www.ascii-code.com/

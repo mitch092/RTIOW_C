@@ -8,8 +8,9 @@
 
 #include "image_tga.h"
 #define HEADER_SIZE 18
+#define FOOTER_SIZE 26
 
-size_t image_tga_size_bytes(uint16_t width, uint16_t height) { return (HEADER_SIZE + (3 * width * height)); }
+size_t image_tga_size_bytes(uint16_t width, uint16_t height) { return (HEADER_SIZE + (3 * width * height) + FOOTER_SIZE); }
 
 image_tga image_tga_create(uint16_t width, uint16_t height) {
   image_tga image;
@@ -21,6 +22,10 @@ image_tga image_tga_create(uint16_t width, uint16_t height) {
   // Set the data type code to uncompressed RGB.
   image.byte_array[2] = 2;
 
+  // Tells the header that the y coordinate is inverted.
+  image.byte_array[10] = (uint8_t)(height);
+  image.byte_array[11] = (uint8_t)((height) >> 8);
+
   // Split the 16 bit width and height into a pair of 8 bit bytes.
   image.byte_array[12] = (uint8_t)(width);
   image.byte_array[13] = (uint8_t)(width >> 8);
@@ -29,6 +34,19 @@ image_tga image_tga_create(uint16_t width, uint16_t height) {
 
   // Set the bits per pixel to 24.
   image.byte_array[16] = 24;
+
+  // "Four way interleaving" (Gimp sets this for the tga files it exports, so I will as well.)
+  image.byte_array[17] = 0x20;
+
+  // Inserting the secret message at the end of the file (visible in the Gimp reference file viewed in a hex editor).
+  const char msg[] = "TRUEVISION-XFILE.";
+  size_t footer_msg_start = image_tga_size_bytes(width, height) - FOOTER_SIZE + 8;
+  for (size_t ch = 0; ch != sizeof(msg); ++ch) {
+    image.byte_array[footer_msg_start + ch] = (uint8_t)(msg[ch]);
+  }
+
+  assert(width == image_tga_width(image));
+  assert(height == image_tga_height(image));
 
   return image;
 }
@@ -44,16 +62,26 @@ uint16_t image_tga_height(const image_tga image) {
 }
 
 void image_tga_set_pixel(image_tga image, uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b) {
+  // Flip the y axis, so that the upper left corner is the origin point.
+  // y = image_tga_height(image) - y - 1;
+
   assert(image.byte_array != NULL);
   assert(0 <= x);
   assert(0 <= y);
   assert(x < image_tga_width(image));
   assert(y < image_tga_height(image));
 
-  const size_t pixel_offset = (HEADER_SIZE + x + y * image_tga_width(image));
+  const size_t pixel_offset = (HEADER_SIZE + (x + y * image_tga_width(image)) * 3);
+
+  assert(pixel_offset < image_tga_size_bytes(image_tga_width(image), image_tga_height(image)));
   image.byte_array[pixel_offset] = b;
+
+  assert((pixel_offset + 1) < image_tga_size_bytes(image_tga_width(image), image_tga_height(image)));
   image.byte_array[pixel_offset + 1] = g;
+
+  assert((pixel_offset + 2) < image_tga_size_bytes(image_tga_width(image), image_tga_height(image)));
   image.byte_array[pixel_offset + 2] = r;
+
   return;
 }
 
@@ -67,6 +95,8 @@ void image_tga_set_all(image_tga image, uint8_t r, uint8_t g, uint8_t b) {
       image_tga_set_pixel(image, x, y, r, g, b);
     }
   }
+
+  return;
 }
 
 bool image_tga_write_file(image_tga image, const char* filename) {
@@ -91,7 +121,6 @@ bool image_tga_write_file(image_tga image, const char* filename) {
 
 void image_tga_destroy(image_tga image) {
   assert(image.byte_array != NULL);
-
   free(image.byte_array);
   image.byte_array = NULL;
   return;
