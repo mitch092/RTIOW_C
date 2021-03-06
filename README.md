@@ -1,10 +1,13 @@
-# Raytracing in One Weekend, in pure C11
+# Raytracing in One Weekend, written in C
 This is an attempt at a simple raytracer written in simple, clean C code (or rather, hopefully as simple as C can get). 
 No callbacks, no classes, no templates, no libraries, no frameworks,
 no game engines, no physics simulations, no animations, no game loops.
 
 Takes a description of a scene (hardcoded in C, for now), a name for the image file, the width and height,
 and generates the image file in one pass.
+
+# TGA Exported test image
+![Picture of a color spectrum](images/spectrum.tga?raw=true)
 
 # Sources
 * https://raytracing.github.io/books/RayTracingInOneWeekend.html
@@ -19,3 +22,4 @@ and generates the image file in one pass.
 * https://stackoverflow.com/questions/28691612/how-to-go-from-fopen-to-fopen-s/28696742
 * https://eklitzke.org/declaring-c-string-constants-the-right-way
 * https://www.ascii-code.com/
+* https://stackoverflow.com/questions/14539867/how-to-display-a-progress-indicator-in-pure-c-c-cout-printf

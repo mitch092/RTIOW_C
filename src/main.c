@@ -5,6 +5,7 @@
 
 #include "image_tga.h"
 #include "params.h"
+#include "progress.h"
 
 int main(int argc, const char* argv[]) {
   if (argc != 4) {
@@ -25,16 +26,21 @@ int main(int argc, const char* argv[]) {
   }
 
   image_tga image = image_tga_create(width, height);
+  fprintf_s(stderr, "Scanline percent:\n");
+  for (uint16_t y = 0; y != height; ++y) {
+    display_progress_bar((double)(y + 1) / (double)(height));
+    for (uint16_t x = 0; x != width; ++x) {
+      double r = (double)(x) / (double)(width - 1);
+      double g = (double)(y) / (double)(height - 1);
+      double b = 0.25;
 
-  //image_tga_set_all(image, 255, 255, 255);
-  //image_tga_set_pixel(image, 0, 0, 0, 0, 0);
+      uint8_t ir = (uint8_t)(255.999 * r);
+      uint8_t ig = (uint8_t)(255.999 * g);
+      uint8_t ib = (uint8_t)(255.999 * b);
 
-  image_tga_set_pixel(image, 0, 0, 255, 0, 0);
-  image_tga_set_pixel(image, 1, 0, 0, 255, 0);
-  image_tga_set_pixel(image, 2, 0, 0, 0, 255);
-  image_tga_set_pixel(image, 0, 1, 255, 255, 0);
-  image_tga_set_pixel(image, 1, 1, 255, 255, 255);
-  image_tga_set_pixel(image, 2, 1, 0, 0, 0);
+      image_tga_set_pixel(image, x, y, ir, ig, ib);
+    }
+  }
 
   if (image_tga_write_file(image, argv[3]) == false) {
     return EXIT_FAILURE;

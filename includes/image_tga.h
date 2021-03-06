@@ -8,7 +8,6 @@ typedef struct{
   uint8_t* byte_array;
 } image_tga;
 
-
 extern size_t image_tga_size_bytes(uint16_t width, uint16_t height);
 extern image_tga image_tga_create(uint16_t width, uint16_t height);
 extern uint16_t image_tga_width(const image_tga image);

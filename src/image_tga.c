@@ -13,6 +13,9 @@
 size_t image_tga_size_bytes(uint16_t width, uint16_t height) { return (HEADER_SIZE + (3 * width * height) + FOOTER_SIZE); }
 
 image_tga image_tga_create(uint16_t width, uint16_t height) {
+  assert(0 < width);
+  assert(0 < height);
+
   image_tga image;
   // Using calloc to zero out the entire image. So the pixels will all be black by default.
   // And most of the header is zero, except for a few bytes.
@@ -35,8 +38,9 @@ image_tga image_tga_create(uint16_t width, uint16_t height) {
   // Set the bits per pixel to 24.
   image.byte_array[16] = 24;
 
-  // "Four way interleaving" (Gimp sets this for the tga files it exports, so I will as well.)
-  image.byte_array[17] = 0x20;
+  // This is for setting the origin point.
+  // 0x00 is the lower left corner of the screen (is set that way by calloc), 0x20 sets it to be the upper left.
+  // image.byte_array[17] = 0x20;
 
   // Inserting the secret message at the end of the file (visible in the Gimp reference file viewed in a hex editor).
   const char msg[] = "TRUEVISION-XFILE.";
@@ -62,7 +66,8 @@ uint16_t image_tga_height(const image_tga image) {
 }
 
 void image_tga_set_pixel(image_tga image, uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b) {
-  // Flip the y axis, so that the upper left corner is the origin point.
+  // Flip the y axis, so that the upper left corner is the origin point, and not the lower left.
+  // Not needed, because there is a single byte in the header that controls this.
   // y = image_tga_height(image) - y - 1;
 
   assert(image.byte_array != NULL);

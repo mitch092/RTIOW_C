@@ -32,6 +32,6 @@ if($config){
 
 Push-Location -Path $builds
 iex "cmake.exe --build ."
-iex ".\RTIOW_C.exe 3 2 test.tga"
-iex "& 'C:\Program Files\GIMP 2\bin\gimp-2.10.exe' 'test.tga'"
+iex ".\RTIOW_C.exe 256 256 test.tga"
+#iex "& 'C:\Program Files\GIMP 2\bin\gimp-2.10.exe' 'test.tga'"
 Pop-Location

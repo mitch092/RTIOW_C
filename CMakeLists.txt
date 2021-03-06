@@ -2,10 +2,12 @@
 project (RTIOW_C LANGUAGES C)
 
 set(H_FILES includes/image_tga.h
-            includes/params.h)
+            includes/params.h
+            includes/progress.h)
 set(C_FILES src/main.c 
             src/image_tga.c
-            src/params.c)
+            src/params.c
+            src/progress.c)
             
 add_executable(${PROJECT_NAME} ${C_FILES} ${H_FILES})
 target_include_directories(${PROJECT_NAME} PRIVATE includes)
