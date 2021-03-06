@@ -7,7 +7,7 @@ Takes a description of a scene (hardcoded in C, for now), a name for the image f
 and generates the image file in one pass.
 
 # TGA Exported test image
-![Picture of a color spectrum](images/spectrum.tga?raw=true)
+![Picture of a color spectrum](images/spectrum.png?raw=true)
 
 # Sources
 * https://raytracing.github.io/books/RayTracingInOneWeekend.html
