@@ -10,9 +10,11 @@
 #define HEADER_SIZE 18
 #define FOOTER_SIZE 26
 
-size_t image_tga_size_bytes(uint16_t width, uint16_t height) { return (HEADER_SIZE + (3 * width * height) + FOOTER_SIZE); }
+size_t image_tga_size_bytes(const uint16_t width, const uint16_t height) {
+  return (HEADER_SIZE + (3 * width * height) + FOOTER_SIZE);
+}
 
-image_tga image_tga_create(uint16_t width, uint16_t height) {
+image_tga image_tga_create(const uint16_t width, const uint16_t height) {
   assert(0 < width);
   assert(0 < height);
 
@@ -65,7 +67,7 @@ uint16_t image_tga_height(const image_tga image) {
   return ((uint16_t)(image.byte_array[15]) << 8) | (uint16_t)(image.byte_array[14]);
 }
 
-void image_tga_set_pixel(image_tga image, uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b) {
+void image_tga_set(image_tga image, const uint16_t x, const uint16_t y, const uint8_t r, const uint8_t g, const uint8_t b) {
   // Flip the y axis, so that the upper left corner is the origin point, and not the lower left.
   // Not needed, because there is a single byte in the header that controls this.
   // y = image_tga_height(image) - y - 1;
@@ -90,21 +92,21 @@ void image_tga_set_pixel(image_tga image, uint16_t x, uint16_t y, uint8_t r, uin
   return;
 }
 
-void image_tga_set_all(image_tga image, uint8_t r, uint8_t g, uint8_t b) {
+void image_tga_set_all(image_tga image, const uint8_t r, const uint8_t g, const uint8_t b) {
   assert(image.byte_array != NULL);
 
   uint16_t height = image_tga_height(image);
   uint16_t width = image_tga_width(image);
   for (uint16_t y = 0; y != height; ++y) {
     for (uint16_t x = 0; x != width; ++x) {
-      image_tga_set_pixel(image, x, y, r, g, b);
+      image_tga_set(image, x, y, r, g, b);
     }
   }
 
   return;
 }
 
-bool image_tga_write_file(image_tga image, const char* filename) {
+bool image_tga_write_file(const image_tga image, const char* filename) {
   assert(image.byte_array != NULL);
 
   FILE* file;
@@ -118,7 +120,7 @@ bool image_tga_write_file(image_tga image, const char* filename) {
   uint16_t width = image_tga_width(image);
   uint16_t height = image_tga_height(image);
   size_t byte_count = image_tga_size_bytes(width, height);
-  fwrite((void*)(image.byte_array), sizeof(uint8_t), byte_count, file);
+  fwrite((const void*)(image.byte_array), sizeof(uint8_t), byte_count, file);
 
   fclose(file);
   return true;
