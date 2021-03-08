@@ -4,12 +4,14 @@ project (RTIOW_C LANGUAGES C)
 set(H_FILES includes/image_tga.h
             includes/params.h
             includes/progress.h
-            includes/vec3.h)
+            includes/vec3.h
+            includes/ray.h)
 set(C_FILES src/main.c 
             src/image_tga.c
             src/params.c
             src/progress.c
-            src/vec3.c)
+            src/vec3.c
+            src/ray.c)
             
 add_executable(${PROJECT_NAME} ${C_FILES} ${H_FILES})
 target_include_directories(${PROJECT_NAME} PRIVATE includes)
