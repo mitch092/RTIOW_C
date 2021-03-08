@@ -32,7 +32,7 @@ int main(int argc, const char* argv[]) {
   for (uint16_t y = 0; y != height; ++y) {
     display_progress_bar((double)(y + 1) / (double)(height));
     for (uint16_t x = 0; x != width; ++x) {
-      pixel p = color_to_pixel(reals_to_vec3((double)(x) / (double)(width - 1), (double)(y) / (double)(height - 1), 0.25));
+      pixel p = color_to_pixel(vec3_from_reals((double)(x) / (double)(width - 1), (double)(y) / (double)(height - 1), 0.25));
       image_tga_set(image, x, y, p.r, p.g, p.b);
     }
   }
