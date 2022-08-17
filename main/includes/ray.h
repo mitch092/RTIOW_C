@@ -7,5 +7,5 @@ typedef struct {
   vec3 dir;
 } ray;
 
-extern ray make_ray(const point3 origin, const point3 direction);
-extern point3 ray_at(const ray r, real t);
+ray make_ray(const point3 origin, const point3 direction);
+point3 ray_at(const ray r, real t);
